@@ -4,11 +4,29 @@ use Data::Rx;
 use Mojo::File;
 use Mojo::JSON;
 
+package Reindeer::YYYYMMDD {
+	use parent 'Data::Rx::CommonType::EasyNew';
+
+	sub type_uri {
+		'tag:example.com,EXAMPLE:rx/reindeer-date',
+		}
+
+	sub assert_valid {
+		my ($self, $value) = @_;
+		return 1 unless defined $value;
+		$value =~ /\A(?:\d\d\d\d)-\d\d-\d\d\z/a or $self->fail({
+			error => [ qw(type) ],
+			message => "date value is not YYYY-MM-DD",
+			value => $value,
+			})
+		}
+	}
+
 my $record = {
 	type     => '//rec',
 	required => {
 		name       => { type => '//str' },
-		start_date => { type => '//str' },
+		start_date => { type => 'tag:example.com,EXAMPLE:rx/reindeer-date' },
 		},
 	optional => {
 		aliases => {
@@ -18,7 +36,11 @@ my $record = {
 		},
 	};
 
-my $rx = Data::Rx->new;
+my $rx = Data::Rx->new({
+  type_plugins => [qw(
+    Reindeer::YYYYMMDD
+  )],	});
+
 my $schema = $rx->make_schema($record);
 
 foreach my $file ( sort @ARGV ) {
