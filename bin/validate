@@ -3,6 +3,7 @@ use v5.14;
 use Data::Rx;
 use Mojo::File;
 use Mojo::JSON;
+use YAML;
 
 package Reindeer::YYYYMMDD {
 	use parent 'Data::Rx::CommonType::EasyNew';
@@ -22,19 +23,7 @@ package Reindeer::YYYYMMDD {
 		}
 	}
 
-my $record = {
-	type     => '//rec',
-	required => {
-		name       => { type => '//str' },
-		start_date => { type => 'tag:example.com,EXAMPLE:rx/reindeer-date' },
-		},
-	optional => {
-		aliases => {
-			type => '//arr',
-			contents => '//str'
-			}
-		},
-	};
+my $record = YAML::LoadFile( 'rx.yml' );
 
 my $rx = Data::Rx->new({
   type_plugins => [qw(

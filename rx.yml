@@ -1,0 +1,11 @@
+---
+type: '//rec'
+required:
+    name:
+        type: '//str'
+    start_date:
+        type: 'tag:example.com,EXAMPLE:rx/reindeer-date'
+optional:
+    aliases:
+        type: '//arr'
+        contents: '//str'
