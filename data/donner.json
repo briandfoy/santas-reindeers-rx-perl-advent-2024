@@ -1,5 +1,5 @@
 {
-"Name": "Donner",
+"name": "Donner",
 "aliases": [ "Dunder", "Donder" ],
-"start-date": "1823-12-24"
+"start_date": "1823-12-24"
 }

@@ -10,6 +10,12 @@ my $record = {
 		name       => { type => '//str' },
 		start_date => { type => '//str' },
 		},
+	optional => {
+		aliases => {
+			type => '//arr',
+			contents => '//str'
+			}
+		},
 	};
 
 my $rx = Data::Rx->new;
