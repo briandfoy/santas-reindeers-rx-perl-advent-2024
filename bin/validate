@@ -1,0 +1,35 @@
+use v5.14;
+
+use Data::Rx;
+use Mojo::File;
+use Mojo::JSON;
+
+my $record = {
+	type     => '//rec',
+	required => {
+		name       => { type => '//str' },
+		start_date => { type => '//str' },
+		},
+	};
+
+my $rx = Data::Rx->new;
+my $schema = $rx->make_schema($record);
+
+foreach my $file ( sort @ARGV ) {
+	say "Checking $file";
+
+	my $data = eval { Mojo::JSON::decode_json( Mojo::File->new($file)->slurp ) };
+	unless( $data ) {
+		my $error = $@ =~ s/\.^/\n/gmr;
+		say "\tCould not read <$file>: $error";
+		next;
+		}
+
+	eval { $schema->assert_valid($data) };
+	my $at = $@;
+	next unless length $at;
+
+	foreach my $failure ( @{ $at->failures } ) {
+		say "\t$failure";
+		}
+	};
